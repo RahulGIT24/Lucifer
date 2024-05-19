@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     await connectToDB();
 
     try {
-        const { name, email, password,gender } = await request.json();
+        const { name, email, password, gender } = await request.json();
 
         const existingUserByEmail = await UserModel.findOne({ email: email });
         const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -33,9 +33,9 @@ export async function POST(request: Request) {
             expiryDate.setHours(expiryDate.getHours() + 1);
 
             let pic = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-            if(gender==='female'){
+            if (gender === 'female') {
                 pic = "https://cdn2.iconfinder.com/data/icons/business-and-finance-related-hand-gestures/256/face_female_blank_user_avatar_mannequin-512.png"
-            }else if(gender=='male'){
+            } else if (gender == 'male') {
                 pic = "https://w7.pngwing.com/pngs/910/606/png-transparent-head-the-dummy-avatar-man-tie-jacket-user.png"
             }
 
@@ -46,13 +46,13 @@ export async function POST(request: Request) {
                 verifyCode,
                 verifyCodeExpiry: expiryDate,
                 gender,
-                profilePic:pic
+                profilePic: pic
             })
 
             await user.save()
         }
 
-        const emailResponse = await sendVerificationEmail(email, name.split(" ")[0], verifyCode);
+        const emailResponse = await sendVerificationEmail(email, name.split(" ")[0], 'VERIFY', verifyCode);
 
         if (!emailResponse.success) {
             return Response.json({

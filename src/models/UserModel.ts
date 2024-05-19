@@ -6,8 +6,8 @@ interface User extends Document {
     password: string,
     verifyCode: string,
     verifyCodeExpiry: Date,
-    forgotPasswordCode: string,
-    forgotPasswordCodeExpiry: Date,
+    forgotPasswordToken: string,
+    forgotPasswordTokenExpiry: Date,
     isVerified: boolean,
     profilePic:string,
     gender:string
@@ -32,10 +32,10 @@ const UserSchema: Schema<User> = new Schema({
         type: String,
         required: [true, "Verify code is required"]
     },
-    forgotPasswordCode: {
+    forgotPasswordToken: {
         type: String,
     },
-    forgotPasswordCodeExpiry: {
+    forgotPasswordTokenExpiry: {
         type: Date,
     },
     isVerified: {
