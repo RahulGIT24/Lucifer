@@ -8,7 +8,9 @@ interface User extends Document {
     verifyCodeExpiry: Date,
     forgotPasswordCode: string,
     forgotPasswordCodeExpiry: Date,
-    isVerified: boolean
+    isVerified: boolean,
+    profilePic:string,
+    gender:string
 }
 
 const UserSchema: Schema<User> = new Schema({
@@ -44,6 +46,13 @@ const UserSchema: Schema<User> = new Schema({
         type: Date,
         required: [true, "Verify code expiry is required"]
     },
+    profilePic:{
+        type:String,
+    },
+    gender:{
+        type:String,
+        required:[true,"Please provide your gender"]
+    }
 })
 
 const UserModel = (mongoose.models.User || mongoose.model('User', UserSchema))
