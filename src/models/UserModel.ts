@@ -34,6 +34,7 @@ const UserSchema: Schema<User> = new Schema({
     },
     forgotPasswordToken: {
         type: String,
+        default:""
     },
     forgotPasswordTokenExpiry: {
         type: Date,
