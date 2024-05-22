@@ -49,7 +49,7 @@ const signin = () => {
     }
 
     if (result?.url) {
-      router.replace("/chat");
+      router.replace("/talk");
     }
     setIsSubmitting(false);
   };

@@ -5,7 +5,7 @@ import { connectToDB } from "@/lib/dbConnect"
 
 export async function POST(request: Request) {
     await connectToDB();
-
+    let userId;
     try {
         const { name, email, password, gender } = await request.json();
 
@@ -26,6 +26,7 @@ export async function POST(request: Request) {
                 existingUserByEmail.verifyCode = verifyCode;
                 existingUserByEmail.verifyCodeExpiry = new Date(Date.now() + 360000)
                 await existingUserByEmail.save();
+                userId = existingUserByEmail._id;
             }
         } else {
             const hashedPassword = await bcrypt.hash(password, 10);
@@ -50,6 +51,7 @@ export async function POST(request: Request) {
             })
 
             await user.save()
+            userId = user._id;
         }
 
         const emailResponse = await sendVerificationEmail(email, name.split(" ")[0], 'VERIFY', verifyCode);
@@ -63,7 +65,8 @@ export async function POST(request: Request) {
 
         return Response.json({
             success: true,
-            message: "User registered, Please verify your email"
+            message: "User registered, Please verify your email",
+            userId
         }, { status: 201 })
     } catch (error) {
         return Response.json({

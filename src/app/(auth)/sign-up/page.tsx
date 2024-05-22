@@ -50,7 +50,7 @@ const sinUp = () => {
         title: "Success",
         description: res.data.message,
       });
-      router.replace(`/verify/${data.email}`);
+      router.replace(`/verify/${res.data.userId}`);
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       let errMessage = axiosError.response?.data.message;

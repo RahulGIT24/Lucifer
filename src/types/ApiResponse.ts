@@ -1,4 +1,5 @@
 export interface ApiResponse{
     success:boolean,
-    message:string
+    message:string,
+    userId?:string
 }
