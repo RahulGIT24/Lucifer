@@ -20,7 +20,7 @@ export const authOptions: NextAuthOptions = {
                     if (!user) {
                         throw new Error("No user found")
                     }
-                    if(!user.isVerfied){
+                    if(user.isVerfied === false){
                         throw new Error("You are not verified, You can't login in")
                     }
                     const isPasswordCompare = await bcrypt.compare(credentials.password,user.password);

@@ -25,6 +25,7 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { ApiResponse } from "@/types/ApiResponse";
+import Link from "next/link";
 
 const sinUp = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -142,6 +143,12 @@ const sinUp = () => {
             </Button>
           </form>
         </Form>
+        <p>Already have an account? <Link
+              href={"/sign-in"}
+              className="text-blue-600 hover:text-blue-800"
+            >
+              Sign In
+            </Link></p>
       </div>
     </main>
   );
