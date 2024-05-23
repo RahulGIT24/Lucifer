@@ -46,11 +46,17 @@ const signin = () => {
         description: result.error,
         variant: "destructive",
       });
+      setIsSubmitting(false);
+      return;
     }
 
     if (result?.url) {
       router.replace("/talk");
     }
+    toast({
+      title: "Welcome Back",
+      variant: "default",
+    });
     setIsSubmitting(false);
   };
   return (
@@ -80,7 +86,7 @@ const signin = () => {
                 <FormItem>
                   <FormLabel>Enter Your Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="password" type="password"{...field} />
+                    <Input placeholder="Password" type="password"{...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -104,7 +110,7 @@ const signin = () => {
           </Link>
         </p>
         <p>
-          Have you forgotten your password?{" "}
+          Have you forgotten your Password?{" "}
           <Link href={"/forgot-password"} className="text-blue-600 hover:text-blue-800">
             Forgot Password
           </Link>
