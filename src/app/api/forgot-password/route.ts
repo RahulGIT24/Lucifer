@@ -25,8 +25,9 @@ export async function POST(request:Request){
             },{status:400})
         }
 
-        const forgotPasswordToken = await bcrypt.hash(isExistingUser._id.toString(),10);
-        const link = `${process.env.DOMAIN}/forgotpassword/${forgotPasswordToken}`;
+        let forgotPasswordToken = await bcrypt.hash(isExistingUser.name.toString(),10);
+        forgotPasswordToken = forgotPasswordToken.replace(/\//g, '');
+        const link = `${process.env.DOMAIN}/reset-password/${forgotPasswordToken}`;
         isExistingUser.forgotPasswordToken = forgotPasswordToken;
         const expireToken = new Date();
         expireToken.setHours(expireToken.getHours() + 1);

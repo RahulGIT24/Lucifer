@@ -80,12 +80,12 @@ const signin = () => {
                 <FormItem>
                   <FormLabel>Enter Your Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="password" {...field} />
+                    <Input placeholder="password" type="password"{...field} />
                   </FormControl>
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting} className="w-full">
               {isSubmitting ? (
                 <>
                   <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> Signing
@@ -101,6 +101,12 @@ const signin = () => {
           Don't have an account?{" "}
           <Link href={"/sign-up"} className="text-blue-600 hover:text-blue-800">
             Sign Up
+          </Link>
+        </p>
+        <p>
+          Have you forgotten your password?{" "}
+          <Link href={"/forgot-password"} className="text-blue-600 hover:text-blue-800">
+            Forgot Password
           </Link>
         </p>
       </div>

@@ -95,7 +95,7 @@ const page = () => {
               <Button className="my-4 w-full" type="submit" >
                 {isSubmitting ? (
                   <>
-                    <ReloadIcon /> Verifying
+                    <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/> Verifying
                   </>
                 ) : (
                   "Verify"

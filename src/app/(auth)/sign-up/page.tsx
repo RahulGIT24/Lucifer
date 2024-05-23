@@ -102,7 +102,7 @@ const sinUp = () => {
                 <FormItem>
                   <FormLabel>Enter Your Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="password" {...field} />
+                    <Input placeholder="password"  type="password" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -131,7 +131,7 @@ const sinUp = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting} className="w-full">
               {isSubmitting ? (
                 <>
                   <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> Signing
