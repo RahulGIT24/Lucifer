@@ -12,13 +12,13 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { signInSchema } from "@/schemas/signInSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { signIn } from "next-auth/react";
+import { Loader2 } from "lucide-react";
 
 const signin = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -86,7 +86,7 @@ const signin = () => {
                 <FormItem>
                   <FormLabel>Enter Your Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="Password" type="password"{...field} />
+                    <Input placeholder="Password" type="password" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -94,8 +94,8 @@ const signin = () => {
             <Button type="submit" disabled={isSubmitting} className="w-full">
               {isSubmitting ? (
                 <>
-                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> Signing
-                  In
+                  Signing In
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 </>
               ) : (
                 "Sign In"
@@ -111,7 +111,10 @@ const signin = () => {
         </p>
         <p>
           Have you forgotten your Password?{" "}
-          <Link href={"/forgot-password"} className="text-blue-600 hover:text-blue-800">
+          <Link
+            href={"/forgot-password"}
+            className="text-blue-600 hover:text-blue-800"
+          >
             Forgot Password
           </Link>
         </p>

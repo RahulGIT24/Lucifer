@@ -22,7 +22,7 @@ import axios, { AxiosError } from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { ApiResponse } from "@/types/ApiResponse";
 import { Button } from "@/components/ui/button";
-import { ReloadIcon } from "@radix-ui/react-icons";
+import { Loader2 } from "lucide-react";
 
 const page = () => {
   const params = useParams();
@@ -95,7 +95,7 @@ const page = () => {
               <Button className="my-4 w-full" type="submit" >
                 {isSubmitting ? (
                   <>
-                    <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/> Verifying
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin"/> Verifying
                   </>
                 ) : (
                   "Verify"

@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ReloadIcon } from "@radix-ui/react-icons";
+import { Loader2 } from "lucide-react";
 
 const page = () => {
   const [token, setToken] = useState("");
@@ -111,7 +111,7 @@ const page = () => {
             <Button type="submit" className="w-full">
               {isChanging ? (
                 <>
-                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 </>
               ) : (
                 "Reset Password"

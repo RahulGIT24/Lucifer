@@ -21,11 +21,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { ApiResponse } from "@/types/ApiResponse";
 import Link from "next/link";
+import { Loader2 } from "lucide-react";
 
 const sinUp = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -102,7 +102,7 @@ const sinUp = () => {
                 <FormItem>
                   <FormLabel>Enter Your Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="password"  type="password" {...field} />
+                    <Input placeholder="password" type="password" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -134,8 +134,8 @@ const sinUp = () => {
             <Button type="submit" disabled={isSubmitting} className="w-full">
               {isSubmitting ? (
                 <>
-                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> Signing
-                  Up
+                  Signing Up
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 </>
               ) : (
                 "Sign Up"
@@ -143,12 +143,12 @@ const sinUp = () => {
             </Button>
           </form>
         </Form>
-        <p>Already have an account? <Link
-              href={"/sign-in"}
-              className="text-blue-600 hover:text-blue-800"
-            >
-              Sign In
-            </Link></p>
+        <p>
+          Already have an account?{" "}
+          <Link href={"/sign-in"} className="text-blue-600 hover:text-blue-800">
+            Sign In
+          </Link>
+        </p>
       </div>
     </main>
   );

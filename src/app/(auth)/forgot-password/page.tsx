@@ -11,13 +11,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { forgotPasswordSchema } from "@/schemas/forgotPasswordSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {z} from "zod";
 import axios, { AxiosError } from "axios"
 import { ApiResponse } from "@/types/ApiResponse";
 import { useToast } from "@/components/ui/use-toast";
+import { Loader2 } from "lucide-react";
 
 const page = () => {
   const [isChecking, setIsChecking] = useState<boolean>(false);
@@ -72,7 +72,7 @@ const page = () => {
           <Button className="w-full" type="submit">
             {isChecking ? (
               <>
-                <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/> Sending
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending
               </>
             ) : (
               <>Send Password Recovery Link</>

@@ -43,6 +43,7 @@ export const authOptions: NextAuthOptions = {
                 token.isVerified = user.isVerified,
                 token.name = user.name,
                 token.email = user.email
+                token.profilePic = user.profilePic
             }
             return token;
         },
@@ -52,6 +53,7 @@ export const authOptions: NextAuthOptions = {
                 session.user.isVerified = token.isVerified,
                 session.user.name = token.name,
                 session.user.email = token.email
+                session.user.profilePic = token.profilePic
             }
             return session;
         }

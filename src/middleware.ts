@@ -10,6 +10,7 @@ export const config = {
     "/forgot-password",
     "/talk",
     "/reset-password/:path*",
+    '/'
   ],
 };
 
