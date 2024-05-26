@@ -79,7 +79,7 @@ const Chat = () => {
           >
             <Menu />
           </span>
-          <h1 className="text-2xl font-medium pl-5">Gemini</h1>
+          <h1 className="text-2xl font-medium pl-5">Lucifer</h1>
         </div>
         {session?.user && (
           <img

@@ -12,7 +12,7 @@ export async function sendVerificationEmail(email: string, name: string, type:st
         await resend.emails.send({
             from: 'onboarding@resend.dev',
             to: email,
-            subject: type === 'VERIFY' ? 'Verfication Code for Gemini' : 'Password Recovery for Gemini',
+            subject: type === 'VERIFY' ? 'Verfication Code for Lucifer' : 'Password Recovery for Lucifer',
             react: type === 'VERIFY' ? VerificationEmail({ otp: verifyCode || '', username: name }) : ForgotPasswordEmail({ username: name, link: link || '' })
         });
         return {
