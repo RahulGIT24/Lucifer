@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';import sidebarSlice from './features/sidebar/sidebarSlice';
+import chatSlice from './features/chat/chatSlice';
 ;
 // store variable is a global variable.
 export const makeStore = () => {
     return configureStore({
         reducer: {
-            sidebarSlice:sidebarSlice
+            sidebarSlice:sidebarSlice,
+            chatSlice:chatSlice
         },
     });
 };

@@ -4,14 +4,16 @@
 
 /* WebKit Browsers (Chrome, Safari, newer versions of Edge) */
 ::-webkit-scrollbar {
-  width: 12px;  /* Width of the scrollbar */
+  width: 5px;  /* Width of the scrollbar */
 }
 
 ::-webkit-scrollbar-track {
-  background: #4A5568;  /* Background color of the track */
+  background: transparent;  /* Background color of the track */
 }
 
 ::-webkit-scrollbar-thumb {
+  border: 1px solid transparent;
+  border-radius: 12px;
   background-color: white;  /* Color of the scrollbar thumb */
 }
 
