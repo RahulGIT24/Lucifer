@@ -2,7 +2,7 @@
 
 import { CircleStop, Loader2, Menu, Mic, SendHorizontal } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import Card from "./Card";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { setShowSidebar } from "@/lib/store/features/sidebar/sidebarSlice";
