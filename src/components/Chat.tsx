@@ -4,13 +4,19 @@ import { Menu, Mic, SendHorizontal } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import Card from "./Card";
+import { useAppDispatch, useAppStore } from "@/lib/store/hooks";
+import { setShowSidebar } from "@/lib/store/features/sidebar/sidebarSlice";
 
 const Chat = () => {
   const [currentPrompt, setCurrentPrompt] = useState("");
   const { data: session } = useSession();
+  const dispatch = useAppDispatch();
   const user = session?.user;
 
-  const toggleMenu = () => {};
+  const toggleMenu = (e:any) => {
+    e.stopPropagation()
+    dispatch(setShowSidebar(true))
+  };
 
   return (
     <div className="w-full bg-transparent min-h-screen flex flex-col items-center overflow-hidden relative">
@@ -50,10 +56,10 @@ const Chat = () => {
             <div className="flex flex-wrap gap-4 mt-4">
               {session?.user && (
                 <>
-                  <Card text="Can you generate a random quiz for me" />
-                  <Card text="Can you generate a random quiz for me" />
-                  <Card text="Can you generate a random quiz for me" />
-                  <Card text="Can you generate a random quiz for me" />
+                  <Card text="Can you generate a random quiz for me" setCurrentPrompt={setCurrentPrompt}/>
+                  <Card text="Write a python code to find factorial of a number" setCurrentPrompt={setCurrentPrompt}/>
+                  <Card text="What are the signs of cancer" setCurrentPrompt={setCurrentPrompt}/>
+                  <Card text="Explain Object Oriented Programming" setCurrentPrompt={setCurrentPrompt}/>
                 </>
               )}
             </div>
@@ -61,7 +67,7 @@ const Chat = () => {
         </div>
       </div>
       <div className="fixed bottom-0 w-full pb-4 flex justify-center items-center bg-transparent">
-        <div className="w-full sm:w-[80%] lg:w-[75%] flex">
+        <div className="w-full md:w-[60%] sm:w-[80%] lg:w-[75%] flex">
           <textarea
             id="chat-input"
             className="bg-zinc-800 w-full min-h-20 h-20 rounded-l-3xl p-5 text-zinc-300 outline-none border border-t-zinc-700 border-l-zinc-700 border-b-zinc-700 border-r-0 shadow-2xl shadow-black overflow-y-auto resize-none z-20"

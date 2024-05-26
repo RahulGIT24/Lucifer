@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster";
 
 import { cn } from "@/lib/utils";
 import AuthProvider from "@/context/AuthProvider";
+import StoreProvider from "./StoreProvider";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -24,15 +25,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <AuthProvider>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
-        )}
-      >
-        {children}
-        <Toaster/>
-      </body>
+        <StoreProvider>
+          <body
+            className={cn(
+              "min-h-screen bg-background font-sans antialiased",
+              fontSans.variable
+            )}
+          >
+            {children}
+            <Toaster />
+          </body>
+        </StoreProvider>
       </AuthProvider>
     </html>
   );
