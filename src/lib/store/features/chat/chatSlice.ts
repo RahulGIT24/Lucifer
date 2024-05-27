@@ -1,13 +1,16 @@
+import { IMessage } from "@/models/MessageModel";
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface ChatSessionInterface {
   chatSessionId: null | string;
   currentPrompt: string;
+  messages:IMessage[]
 }
 
 const initialState: ChatSessionInterface = {
   chatSessionId: null,
   currentPrompt: "",
+  messages:[]
 };
 
 export const chatSlice = createSlice({
@@ -20,9 +23,12 @@ export const chatSlice = createSlice({
     setCurrentPrompt: (state, action) => {
       state.currentPrompt = action.payload;
     },
+    setMessages:(state,action)=>{
+      state.messages.push(action.payload);
+    }
   },
 });
 
-export const { setChatSessionId, setCurrentPrompt } = chatSlice.actions;
+export const { setChatSessionId, setCurrentPrompt,setMessages } = chatSlice.actions;
 
 export default chatSlice.reducer;

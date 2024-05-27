@@ -2,7 +2,7 @@
 
 import { CircleStop, Loader2, Menu, Mic, SendHorizontal } from "lucide-react";
 import { useSession } from "next-auth/react";
-import {  useState } from "react";
+import { useState } from "react";
 import Card from "./Card";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { setShowSidebar } from "@/lib/store/features/sidebar/sidebarSlice";
@@ -12,6 +12,7 @@ import { useToast } from "./ui/use-toast";
 import {
   setChatSessionId,
   setCurrentPrompt,
+  setMessages,
 } from "@/lib/store/features/chat/chatSlice";
 
 const Chat = () => {
@@ -21,6 +22,7 @@ const Chat = () => {
     (state) => state.chatSlice.currentPrompt
   );
   const sessionId = useAppSelector((state) => state.chatSlice.chatSessionId);
+  const messages = useAppSelector((state) => state.chatSlice.messages);
   const dispatch = useAppDispatch();
   const { data: session } = useSession();
   const user = session?.user;
@@ -41,6 +43,13 @@ const Chat = () => {
     }
     setLoading(true);
     try {
+      const chatObject = {
+        sender: "user",
+        content: currentPrompt,
+        timestamp: Date.now(),
+        session_id: sessionId,
+      };
+      dispatch(setMessages(chatObject));
       const response = await axios.post("/api/chat-session", {
         name: currentPrompt,
       });
@@ -70,7 +79,7 @@ const Chat = () => {
 
   return (
     <div className="w-full bg-transparent min-h-screen flex flex-col items-center overflow-hidden relative">
-      <div className="my-4 p-3 text-zinc-300 w-full flex justify-between">
+      <div className="p-3 text-zinc-300 w-full flex justify-between">
         <div className="flex items-center">
           <span
             className="cursor-pointer md:hidden lg:hidden sm:block"
@@ -91,7 +100,7 @@ const Chat = () => {
         )}
       </div>
       {!sessionId && (
-        <div className="flex items-center flex-col w-full overflow-y-auto flex-1 mb-44">
+        <div className="flex items-center flex-col w-full overflow-y-auto flex-1 mb-28  h-full">
           <div className="content py-7 w-full sm:w-11/12 md:w-9/12 px-4">
             <div>
               {session?.user && (
@@ -119,16 +128,11 @@ const Chat = () => {
       )}
       <div className="fixed bottom-0 w-full pb-4 flex justify-center items-center bg-transparent">
         <div className="w-full md:w-[60%] sm:w-[80%] lg:w-[75%] flex">
-          <input
+          <textarea
             id="chat-input"
-            className="bg-zinc-800 w-[100%] min-h-20 rounded-l-3xl p-5 text-zinc-300 outline-none border border-t-zinc-700 border-l-zinc-700 border-b-zinc-700 border-r-0 shadow-2xl shadow-black overflow-y-auto resize-none z-20"
+            className="bg-zinc-800 w-[100%] h-20 rounded-l-3xl p-5 text-zinc-300 outline-none border border-t-zinc-700 border-l-zinc-700 border-b-zinc-700 border-r-0 shadow-2xl shadow-black overflow-y-auto resize-none z-20"
             placeholder="Enter Some Text"
             value={currentPrompt}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                chat();
-              }
-            }}
             onChange={(e) => {
               dispatch(setCurrentPrompt(e.target.value));
             }}
