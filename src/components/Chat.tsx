@@ -2,7 +2,7 @@
 
 import { CircleStop, Loader2, Menu, Mic, SendHorizontal } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "./Card";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { setShowSidebar } from "@/lib/store/features/sidebar/sidebarSlice";
@@ -12,10 +12,14 @@ import { useToast } from "./ui/use-toast";
 import {
   setChatSessionId,
   setCurrentPrompt,
+  setMessageFlag,
   setMessages,
 } from "@/lib/store/features/chat/chatSlice";
+import ChatBox from "./ChatBox"
 
 const Chat = () => {
+  const showSideBar = useAppSelector((state) => state.sidebarSlice.showSideBar);
+  const messageFlag = useAppSelector((state)=>state.chatSlice.messageFlag);
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const currentPrompt = useAppSelector(
@@ -27,9 +31,65 @@ const Chat = () => {
   const { data: session } = useSession();
   const user = session?.user;
 
+  useEffect(() => {
+    if (sessionId) {
+      getMessagesFromDB();
+    }
+  }, [sessionId,messageFlag]);
+
   const toggleMenu = (e: any) => {
     e.stopPropagation();
     dispatch(setShowSidebar(true));
+  };
+
+  const getMessagesFromDB = async () => {
+    try {
+      const response = await axios.get("/api/message?id=" + sessionId);
+      dispatch(setMessages(response.data.messages));
+    } catch (error) {
+      const err = error as AxiosError<ApiResponse>;
+      const errMessage = err.message;
+      toast({
+        title: "Error occured",
+        description: errMessage,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const savePromptInDB = async ({
+    sender,
+    content,
+    sessionId,
+  }: {
+    sender: string;
+    content: string;
+    sessionId: string;
+  }) => {
+    try {
+      if (!content || !sessionId || !sender) {
+        return;
+      }
+      setLoading(true);
+      const response = await axios.post("/api/message", {
+        sender,
+        content,
+        session_id: sessionId,
+      });
+      dispatch(setMessageFlag(!messageFlag))
+      return response.data.success;
+    } catch (error) {
+      const err = error as AxiosError<ApiResponse>;
+      const errMessage = err.message;
+      toast({
+        title: "Error occured",
+        description: errMessage,
+        variant: "destructive",
+      });
+      return false;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const chat = async () => {
@@ -38,23 +98,26 @@ const Chat = () => {
       return;
     }
     if (sessionId) {
+      await savePromptInDB({
+        sender: "user",
+        content: currentPrompt,
+        sessionId,
+      });
       dispatch(setCurrentPrompt(""));
       return;
     }
     setLoading(true);
     try {
-      const chatObject = {
-        sender: "user",
-        content: currentPrompt,
-        timestamp: Date.now(),
-        session_id: sessionId,
-      };
-      dispatch(setMessages(chatObject));
       const response = await axios.post("/api/chat-session", {
         name: currentPrompt,
       });
       if (response.data.success) {
         dispatch(setChatSessionId(response.data.session_id));
+        await savePromptInDB({
+          sender: "user",
+          content: currentPrompt,
+          sessionId: response.data.session_id,
+        });
       }
     } catch (error) {
       const err = error as AxiosError<ApiResponse>;
@@ -78,7 +141,11 @@ const Chat = () => {
   ];
 
   return (
-    <div className="w-full bg-transparent min-h-screen flex flex-col items-center overflow-hidden relative">
+    <div
+      className={`w-full bg-transparent ${
+        showSideBar ? "opacity-30" : "opacity-100"
+      } min-h-screen flex flex-col items-center overflow-hidden relative`}
+    >
       <div className="p-3 text-zinc-300 w-full flex justify-between">
         <div className="flex items-center">
           <span
@@ -99,9 +166,9 @@ const Chat = () => {
           />
         )}
       </div>
-      {!sessionId && (
-        <div className="flex items-center flex-col w-full overflow-y-auto flex-1 mb-28  h-full">
-          <div className="content py-7 w-full sm:w-11/12 md:w-9/12 px-4">
+      <div className="flex items-center flex-col w-full overflow-y-auto flex-1 mb-28  h-full">
+        <div className="content py-7 w-full sm:w-11/12 md:w-9/12 px-4">
+          {!sessionId && (
             <div>
               {session?.user && (
                 <>
@@ -123,9 +190,21 @@ const Chat = () => {
                 )}
               </div>
             </div>
-          </div>
+          )}
+          {
+            sessionId && messages.length>0 && 
+            <div className="w-full">
+              {
+                messages.map((message,index)=>{
+                  return(
+                    <ChatBox key={index} message={message}/>
+                  )
+                })
+              }
+            </div>
+          }
         </div>
-      )}
+      </div>
       <div className="fixed bottom-0 w-full pb-4 flex justify-center items-center bg-transparent">
         <div className="w-full md:w-[60%] sm:w-[80%] lg:w-[75%] flex">
           <textarea

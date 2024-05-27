@@ -5,6 +5,7 @@ export interface IMessage extends Document {
   content: string;
   timestamp: Date;
   session_id: Schema.Types.ObjectId;
+  _id:string
 }
 
 const messageSchema = new Schema<IMessage>({

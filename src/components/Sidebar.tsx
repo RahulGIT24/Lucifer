@@ -8,12 +8,12 @@ import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import {
   setChatSessionId,
   setCurrentPrompt,
+  setMessages,
 } from "@/lib/store/features/chat/chatSlice";
 import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
 import { IChatSession } from "../models/ChatModel";
 import { setShowSidebar } from "@/lib/store/features/sidebar/sidebarSlice";
-import { scroll } from "@/helpers/scroll";
 
 const Sidebar = () => {
   const [isLogout, setisLogout] = useState(false);
@@ -32,13 +32,13 @@ const Sidebar = () => {
     dispatch(setCurrentPrompt(""));
     dispatch(setChatSessionId(null));
     dispatch(setShowSidebar(false));
+    dispatch(setMessages([]))
   };
 
   const getUserChatSessions = async () => {
     try {
       const response = await axios.get("/api/chat-session");
       setSessions(response.data.session);
-      scroll("sessions")
     } catch (error) {
       const err = error as AxiosError<ApiResponse>;
       const errMessage = err.message;
@@ -52,7 +52,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     getUserChatSessions();
-  }, [session, chatSessionId]);
+  }, [chatSessionId]);
 
   const logout = async () => {
     dispatch(setShowSidebar(false));
@@ -82,7 +82,7 @@ const Sidebar = () => {
     e.stopPropagation();
   }}
 >
-  <h1 className="text-2xl font-medium py-5 text-zinc-300 flex items-center text-center justify-center">
+  <h1 className="text-xl font-medium p-5 text-zinc-300 flex items-center text-center justify-center">
     Your Activities <Timer className="mx-2" />
   </h1>
   <div className="sm:block lg:block md:block">
@@ -99,7 +99,7 @@ const Sidebar = () => {
   </div>
   <div className="h-[75%] overflow-y-auto overflow-x-hidden text-zinc-300 w-full mt-3 px-2" id="sessions">
     {sessions &&
-      sessions.map((session, index) => (
+      sessions.map((session) => (
         <p
           key={session._id}
           className={`whitespace-nowrap overflow-hidden text-ellipsis my-3 text-lg hover:bg-zinc-600 w-full cursor-pointer py-3 ${
@@ -110,7 +110,6 @@ const Sidebar = () => {
             dispatch(setChatSessionId(session._id));
           }}
         >
-          <b className="mr-2">{index + 1}</b>
           {session.title}
         </p>
       ))}

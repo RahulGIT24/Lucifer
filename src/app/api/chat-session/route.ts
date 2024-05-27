@@ -2,6 +2,7 @@ import { connectToDB } from "@/lib/dbConnect";
 import ChatSession from "@/models/ChatModel";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
+import mongoose from "mongoose";
 
 export async function POST(request: Request) {
   await connectToDB();
@@ -63,7 +64,12 @@ export async function GET(request: Request) {
       );
     }
 
-    const sessions = await ChatSession.find({ userId: user._id });
+    const userId = new mongoose.Types.ObjectId(user._id)
+
+    const sessions = await ChatSession.aggregate([
+      { $match: {userId} },
+      { $sort: { timestamp: -1 } },
+    ]).exec();
 
     return Response.json(
       {

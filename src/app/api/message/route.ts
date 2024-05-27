@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
 import MessageModel from "@/models/MessageModel";
 import mongoose from "mongoose";
-import ChatSession from "@/models/ChatModel";
 
 export async function POST(request: Request) {
   await connectToDB();
@@ -38,6 +37,7 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
+    console.log(error)
     return Response.json(
       {
         success: false,
@@ -67,8 +67,7 @@ export async function GET(request: Request) {
       );
     }
     const session_id = new mongoose.Types.ObjectId(id as string);
-
-    const messages = await ChatSession.aggregate([
+    const messages = await MessageModel.aggregate([
       { $match: { session_id } },
       { $sort: { timestamp: 1 } },
     ]).exec();
@@ -82,6 +81,7 @@ export async function GET(request: Request) {
       { status: 200 }
     );
   } catch (error) {
+    console.log(error)
     return Response.json(
       {
         success: false,
