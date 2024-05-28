@@ -5,14 +5,12 @@ export interface ChatSessionInterface {
   chatSessionId: null | string;
   currentPrompt: string;
   messages:IMessage[];
-  messageFlag:boolean
 }
 
 const initialState: ChatSessionInterface = {
   chatSessionId: null,
   currentPrompt: "",
   messages:[],
-  messageFlag:false
 };
 
 export const chatSlice = createSlice({
@@ -28,12 +26,9 @@ export const chatSlice = createSlice({
     setMessages:(state,action)=>{
       state.messages = action.payload
     },
-    setMessageFlag:(state,action)=>{
-      state.messageFlag = action.payload
-    }
   },
 });
 
-export const { setChatSessionId, setCurrentPrompt,setMessages,setMessageFlag } = chatSlice.actions;
+export const { setChatSessionId, setCurrentPrompt,setMessages } = chatSlice.actions;
 
 export default chatSlice.reducer;

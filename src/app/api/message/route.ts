@@ -33,6 +33,7 @@ export async function POST(request: Request) {
       {
         success: true,
         message: "Message saved",
+        content:message
       },
       { status: 201 }
     );
