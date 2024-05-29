@@ -19,10 +19,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const { sender, content, session_id } = await request.json();
+    const { role, content, session_id } = await request.json();
 
     const message = await new MessageModel({
-      sender,
+      role,
       content,
       session_id,
     });

@@ -16,12 +16,11 @@ const buildGoogleGenAIPrompt = (messages: Message[]) => ({
 });
 
 export async function POST(req: Request) {
-  let { message } = await req.json();
-  let prompt = [{ role: "user", content: message }];
-  message = prompt;
+  let { messages } = await req.json();
+  console.log(messages)
   const geminiStream = await genAI
     .getGenerativeModel({ model: "gemini-pro" })
-    .generateContentStream(buildGoogleGenAIPrompt(message));
+    .generateContentStream(buildGoogleGenAIPrompt(messages));
 
   const stream = GoogleGenerativeAIStream(geminiStream);
 

@@ -7,7 +7,6 @@ import { Loader2, Plus, Timer } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import {
   setChatSessionId,
-  setCurrentPrompt,
   setMessages,
 } from "@/lib/store/features/chat/chatSlice";
 import axios, { AxiosError } from "axios";
@@ -29,7 +28,6 @@ const Sidebar = () => {
   );
 
   const newChat = () => {
-    dispatch(setCurrentPrompt(""));
     dispatch(setChatSessionId(null));
     dispatch(setShowSidebar(false));
     dispatch(setMessages([]))

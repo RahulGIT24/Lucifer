@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IMessage extends Document {
-  sender: string;
+  role: string;
   content: string;
   timestamp: Date;
   session_id: Schema.Types.ObjectId;
@@ -9,7 +9,7 @@ export interface IMessage extends Document {
 }
 
 const messageSchema = new Schema<IMessage>({
-  sender: {
+  role: {
     type: String,
     required: true,
   },

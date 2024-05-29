@@ -11,7 +11,6 @@ import { ApiResponse } from "@/types/ApiResponse";
 import { useToast } from "./ui/use-toast";
 import {
   setChatSessionId,
-  setCurrentPrompt,
   setMessages,
 } from "@/lib/store/features/chat/chatSlice";
 import ChatBox from "./ChatBox";
@@ -22,11 +21,9 @@ const Chat = () => {
   const showSideBar = useAppSelector((state) => state.sidebarSlice.showSideBar);
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const currentPrompt = useAppSelector(
-    (state) => state.chatSlice.currentPrompt
-  );
   const sessionId = useAppSelector((state) => state.chatSlice.chatSessionId);
   const messages = useAppSelector((state) => state.chatSlice.messages);
+  const [response,setResponse] = useState(false);
   const dispatch = useAppDispatch();
   const { data: session } = useSession();
   const user = session?.user;
@@ -35,6 +32,7 @@ const Chat = () => {
     if (sessionId) {
       getMessagesFromDB();
     }
+    setInput("");
   }, [sessionId]);
 
   const toggleMenu = (e: any) => {
@@ -47,28 +45,40 @@ const Chat = () => {
     isLoading: replyLoading,
     error: modelError,
     handleSubmit,
+    input,
+    handleInputChange,
+    setInput,
+    stop,
   } = useChat({
     api: "/api/get-reply",
-    initialInput: "Can you give a python code to add two numbers",
-    body: { message: currentPrompt },
+    onError: () => {
+      setResponse(!response)
+    },
+    onFinish:()=>{
+      setResponse(!response)
+    }
   });
 
-  useEffect(() => {
+  const saveResinDB = () => {
     if (!replyLoading && reply.length > 0 && sessionId && !modelError) {
       saveMessagesinDB({
-        sender: "lucifer",
-        content: reply[1].content,
+        role: "assistant",
+        content: reply[reply.length - 1].content,
         sessionId: sessionId,
       });
     }
-    if(modelError && sessionId){
+    if (modelError && sessionId) {
       saveMessagesinDB({
-        sender: "lucifer",
-        content: 'Error while generatin response',
+        role: "assistant",
+        content: "Error while generating response",
         sessionId: sessionId,
       });
     }
-  }, [reply, replyLoading]);
+  };
+
+  useEffect(() => {
+    saveResinDB();
+  }, [response]);
 
   const getMessagesFromDB = async () => {
     try {
@@ -86,21 +96,21 @@ const Chat = () => {
   };
 
   const saveMessagesinDB = async ({
-    sender,
+    role,
     content,
     sessionId,
   }: {
-    sender: string;
+    role: string;
     content: string;
     sessionId: string;
   }) => {
     try {
-      if (!content || !sessionId || !sender) {
+      if (!content || !sessionId || !role) {
         return;
       }
       setLoading(true);
       const response = await axios.post("/api/message", {
-        sender,
+        role,
         content,
         session_id: sessionId,
       });
@@ -121,30 +131,31 @@ const Chat = () => {
   const chat = async (e: any) => {
     e.preventDefault();
     if (loading) return;
-    if (!currentPrompt) {
+    if (!input) {
       return;
     }
     if (sessionId) {
       await saveMessagesinDB({
-        sender: "user",
-        content: currentPrompt,
+        role: "user",
+        content: input,
         sessionId,
       });
-      dispatch(setCurrentPrompt(""));
+      handleSubmit(e)
       return;
     }
     setLoading(true);
     try {
       const response = await axios.post("/api/chat-session", {
-        name: currentPrompt,
+        name: input,
       });
       if (response.data.success) {
         dispatch(setChatSessionId(response.data.session_id));
         await saveMessagesinDB({
-          sender: "user",
-          content: currentPrompt,
+          role: "user",
+          content: input,
           sessionId: response.data.session_id,
         });
+        handleSubmit(e)
       }
     } catch (error) {
       const err = error as AxiosError<ApiResponse>;
@@ -155,8 +166,8 @@ const Chat = () => {
         variant: "destructive",
       });
     } finally {
-      dispatch(setCurrentPrompt(""));
       setLoading(false);
+      setInput("")
     }
   };
 
@@ -166,6 +177,10 @@ const Chat = () => {
     "What are the signs of cancer",
     "Explain Object Oriented Programming",
   ];
+
+  const stopGenerating = () => {
+    setLoading(false);
+  };
 
   useEffect(() => {
     scroll("scroll");
@@ -218,7 +233,9 @@ const Chat = () => {
                 {session?.user && (
                   <>
                     {cardData.map((item, index) => {
-                      return <Card key={index} text={item} />;
+                      return (
+                        <Card key={index} text={item} setInput={setInput} />
+                      );
                     })}
                   </>
                 )}
@@ -228,7 +245,13 @@ const Chat = () => {
           {sessionId && messages.length > 0 && (
             <div className="w-full">
               {messages.map((message, index) => {
-                return <ChatBox key={index} message={message} />;
+                return (
+                  <ChatBox
+                    key={index}
+                    message={message}
+                    loading={replyLoading}
+                  />
+                );
               })}
             </div>
           )}
@@ -237,42 +260,39 @@ const Chat = () => {
       <div className="fixed bottom-0 w-full pb-4 flex justify-center items-center bg-transparent">
         <form
           className="w-full md:w-[60%] sm:w-[80%] lg:w-[75%] flex"
-          onSubmit={(e) => {
-            handleSubmit(e);
-            chat(e);
-          }}
+          onSubmit={(e)=>{chat(e);}}
         >
           <textarea
             id="chat-input"
             className="bg-zinc-800 w-[100%] h-20 rounded-l-3xl p-5 text-zinc-300 outline-none border border-t-zinc-700 border-l-zinc-700 border-b-zinc-700 border-r-0 shadow-2xl shadow-black overflow-y-auto resize-none z-20"
             placeholder="Enter Some Text"
-            value={currentPrompt}
+            value={input}
             onChange={(e) => {
-              dispatch(setCurrentPrompt(e.target.value));
+              handleInputChange(e);
             }}
             disabled={loading || replyLoading ? true : false}
           />
           <button
             className={`min-h-20 h-20 text-zinc-300 border shadow-2xl shadow-black border-t-zinc-700 border-b-zinc-700 border-l-0 p-5 bg-zinc-800 flex items-center justify-center ${
-              currentPrompt
-                ? "border-zinc-800"
-                : "border-r-zinc-700 rounded-r-3xl"
+              input ? "border-zinc-800" : "border-r-zinc-700 rounded-r-3xl"
             }`}
-            onClick={() => {
-              if (loading) setLoading(false);
-            }}
+            onClick={stopGenerating}
           >
-            {loading || replyLoading ? <CircleStop strokeWidth={3} /> : <Mic />}
+            {loading || replyLoading ? (
+              <CircleStop strokeWidth={3} onClick={stop} />
+            ) : (
+              <Mic />
+            )}
           </button>
           <button
             className={`min-h-20 h-20 text-zinc-300 border shadow-2xl shadow-black border-t-zinc-700 border-r-zinc-700 border-b-zinc-700 border-l-0 rounded-r-3xl p-5 bg-zinc-800 flex items-center justify-center transition-opacity duration-50 ease-in-out ${
-              currentPrompt ? "opacity-100" : "opacity-0"
+              input ? "opacity-100" : "opacity-0"
             }`}
             type="submit"
           >
             <p
               className={`transition-opacity duration-300 ease-in-out ${
-                currentPrompt ? "animate-slideIn opacity-100" : "opacity-0"
+                input ? "animate-slideIn opacity-100" : "opacity-0"
               }`}
             >
               {loading || replyLoading ? (
