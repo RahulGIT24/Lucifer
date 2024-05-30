@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import AuthProvider from "@/context/AuthProvider";
 import StoreProvider from "./StoreProvider";
+import Head from "next/head";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -24,6 +25,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Head>
+          <link rel="icon" href="/logo.jpeg" />
+        </Head>
       <AuthProvider>
         <StoreProvider>
           <body

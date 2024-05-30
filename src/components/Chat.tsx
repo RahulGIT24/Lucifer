@@ -2,7 +2,7 @@
 
 import { CircleStop, Loader2, Menu, Mic, SendHorizontal } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { FormEvent, FormEventHandler, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Card from "./Card";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { setShowSidebar } from "@/lib/store/features/sidebar/sidebarSlice";
@@ -33,7 +33,7 @@ const Chat = () => {
     if (sessionId) {
       getMessagesFromDB();
     }
-    setReply([])
+    setReply([]);
     setInput("");
     setOnScreenMessages([]);
   }, [sessionId]);
@@ -45,7 +45,7 @@ const Chat = () => {
 
   const {
     messages: reply,
-    setMessages:setReply,
+    setMessages: setReply,
     isLoading: replyLoading,
     error: modelError,
     handleSubmit: getReply,
@@ -121,7 +121,7 @@ const Chat = () => {
         session_id: sessionId,
       });
       dispatch(setMessages([...messages, response.data.content]));
-      setOnScreenMessages([...onScreenMessage,response.data.content]);
+      setOnScreenMessages([...onScreenMessage, response.data.content]);
     } catch (error) {
       const err = error as AxiosError<ApiResponse>;
       const errMessage = err.message;
@@ -250,7 +250,6 @@ const Chat = () => {
                   <ChatBox
                     key={index}
                     message={message}
-                    loading={replyLoading}
                     onScreenMessage={onScreenMessage}
                   />
                 );
@@ -268,6 +267,11 @@ const Chat = () => {
                   />
                 );
               })}
+            </div>
+          )}
+          {replyLoading && sessionId && (
+            <div className="px-20 text-white">
+              <Loader2 className="h-10 min-w-10 animate-spin" strokeWidth={3} />
             </div>
           )}
         </div>

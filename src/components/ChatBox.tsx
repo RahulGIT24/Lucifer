@@ -3,18 +3,28 @@ import { Card, CardContent } from "@/components/ui/card";
 import getDateAndTime from "@/helpers/date";
 import { Loader2 } from "lucide-react";
 import { IMessage } from "@/models/MessageModel";
+import Image from "next/image";
+import logo from "../../public/logo.jpeg";
 
-const ChatBox = ({ message, loading,onScreenMessage }: { message: any; loading: boolean,onScreenMessage?:IMessage[] }) => {
+const ChatBox = ({
+  message,
+  loading,
+  onScreenMessage,
+}: {
+  message: any;
+  loading?: boolean;
+  onScreenMessage?: IMessage[];
+}) => {
   const { finalDate } = getDateAndTime(message.timestamp);
   const isUser = message.role === "user";
 
-  const isOnScreen = onScreenMessage?.some(screenMessage => screenMessage._id === message._id);
-  console.log(isOnScreen)
-  console.log(onScreenMessage)
+  const isOnScreen = onScreenMessage?.some(
+    (screenMessage) => screenMessage._id === message._id
+  );
 
-  if(isOnScreen){
+  if (isOnScreen) {
     return null;
-  }else{
+  } else {
     return (
       <div className={`w-full flex my-4 ${isUser && "justify-end"}`}>
         <Card
@@ -24,6 +34,14 @@ const ChatBox = ({ message, loading,onScreenMessage }: { message: any; loading: 
           } border-transparent min-h-5 text-white flex`}
           title={finalDate}
         >
+          {message.role === "assistant" && (
+            <Image
+              src={logo}
+              alt="Lucifer"
+              title="Lucifer"
+              className="rounded-full w-[4rem] max-h-[4rem]"
+            />
+          )}
           <CardContent
             className={`text-2xl flex ${
               isUser ? "flex-row-reverse" : ""
@@ -39,7 +57,6 @@ const ChatBox = ({ message, loading,onScreenMessage }: { message: any; loading: 
       </div>
     );
   }
-
 };
 
 export default ChatBox;
