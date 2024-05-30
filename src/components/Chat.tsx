@@ -2,7 +2,7 @@
 
 import { CircleStop, Loader2, Menu, Mic, SendHorizontal } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { FormEvent, FormEventHandler, useEffect, useState } from "react";
 import Card from "./Card";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { setShowSidebar } from "@/lib/store/features/sidebar/sidebarSlice";
@@ -16,15 +16,16 @@ import {
 import ChatBox from "./ChatBox";
 import { useChat } from "ai/react";
 import { scroll } from "@/helpers/scroll";
+import { IMessage } from "@/models/MessageModel";
 
 const Chat = () => {
   const showSideBar = useAppSelector((state) => state.sidebarSlice.showSideBar);
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
   const sessionId = useAppSelector((state) => state.chatSlice.chatSessionId);
   const messages = useAppSelector((state) => state.chatSlice.messages);
-  const [response,setResponse] = useState(false);
+  const [response, setResponse] = useState(false); // *will remove later
   const dispatch = useAppDispatch();
+  const [onScreenMessage, setOnScreenMessages] = useState<IMessage[]>([]);
   const { data: session } = useSession();
   const user = session?.user;
 
@@ -32,7 +33,9 @@ const Chat = () => {
     if (sessionId) {
       getMessagesFromDB();
     }
+    setReply([])
     setInput("");
+    setOnScreenMessages([]);
   }, [sessionId]);
 
   const toggleMenu = (e: any) => {
@@ -42,9 +45,10 @@ const Chat = () => {
 
   const {
     messages: reply,
+    setMessages:setReply,
     isLoading: replyLoading,
     error: modelError,
-    handleSubmit,
+    handleSubmit: getReply,
     input,
     handleInputChange,
     setInput,
@@ -52,13 +56,14 @@ const Chat = () => {
   } = useChat({
     api: "/api/get-reply",
     onError: () => {
-      setResponse(!response)
+      setResponse(!response);
     },
-    onFinish:()=>{
-      setResponse(!response)
-    }
+    onFinish: () => {
+      setResponse(!response);
+    },
   });
 
+  ////////////////////////////////*needs modification//////////////////////////////////
   const saveResinDB = () => {
     if (!replyLoading && reply.length > 0 && sessionId && !modelError) {
       saveMessagesinDB({
@@ -79,6 +84,8 @@ const Chat = () => {
   useEffect(() => {
     saveResinDB();
   }, [response]);
+
+  //*************************************************************************************** */
 
   const getMessagesFromDB = async () => {
     try {
@@ -108,13 +115,13 @@ const Chat = () => {
       if (!content || !sessionId || !role) {
         return;
       }
-      setLoading(true);
       const response = await axios.post("/api/message", {
         role,
         content,
         session_id: sessionId,
       });
       dispatch(setMessages([...messages, response.data.content]));
+      setOnScreenMessages([...onScreenMessage,response.data.content]);
     } catch (error) {
       const err = error as AxiosError<ApiResponse>;
       const errMessage = err.message;
@@ -124,13 +131,13 @@ const Chat = () => {
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      false;
     }
   };
 
-  const chat = async (e: any) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (loading) return;
+    if (replyLoading) return;
     if (!input) {
       return;
     }
@@ -140,10 +147,9 @@ const Chat = () => {
         content: input,
         sessionId,
       });
-      handleSubmit(e)
+      getReply(e);
       return;
     }
-    setLoading(true);
     try {
       const response = await axios.post("/api/chat-session", {
         name: input,
@@ -155,7 +161,7 @@ const Chat = () => {
           content: input,
           sessionId: response.data.session_id,
         });
-        handleSubmit(e)
+        getReply(e);
       }
     } catch (error) {
       const err = error as AxiosError<ApiResponse>;
@@ -166,8 +172,7 @@ const Chat = () => {
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
-      setInput("")
+      setInput("");
     }
   };
 
@@ -178,13 +183,9 @@ const Chat = () => {
     "Explain Object Oriented Programming",
   ];
 
-  const stopGenerating = () => {
-    setLoading(false);
-  };
-
   useEffect(() => {
     scroll("scroll");
-  }, [sessionId, messages]);
+  }, [sessionId, messages, input, reply]);
 
   return (
     <div
@@ -250,6 +251,20 @@ const Chat = () => {
                     key={index}
                     message={message}
                     loading={replyLoading}
+                    onScreenMessage={onScreenMessage}
+                  />
+                );
+              })}
+            </div>
+          )}
+          {sessionId && reply.length > 0 && (
+            <div className="w-full">
+              {reply.map((message, index) => {
+                return (
+                  <ChatBox
+                    key={index}
+                    message={message}
+                    loading={replyLoading}
                   />
                 );
               })}
@@ -260,7 +275,7 @@ const Chat = () => {
       <div className="fixed bottom-0 w-full pb-4 flex justify-center items-center bg-transparent">
         <form
           className="w-full md:w-[60%] sm:w-[80%] lg:w-[75%] flex"
-          onSubmit={(e)=>{chat(e);}}
+          onSubmit={handleSubmit}
         >
           <textarea
             id="chat-input"
@@ -270,19 +285,15 @@ const Chat = () => {
             onChange={(e) => {
               handleInputChange(e);
             }}
-            disabled={loading || replyLoading ? true : false}
+            disabled={replyLoading ? true : false}
           />
           <button
             className={`min-h-20 h-20 text-zinc-300 border shadow-2xl shadow-black border-t-zinc-700 border-b-zinc-700 border-l-0 p-5 bg-zinc-800 flex items-center justify-center ${
               input ? "border-zinc-800" : "border-r-zinc-700 rounded-r-3xl"
             }`}
-            onClick={stopGenerating}
+            onClick={stop}
           >
-            {loading || replyLoading ? (
-              <CircleStop strokeWidth={3} onClick={stop} />
-            ) : (
-              <Mic />
-            )}
+            {replyLoading ? <CircleStop strokeWidth={3} /> : <Mic />}
           </button>
           <button
             className={`min-h-20 h-20 text-zinc-300 border shadow-2xl shadow-black border-t-zinc-700 border-r-zinc-700 border-b-zinc-700 border-l-0 rounded-r-3xl p-5 bg-zinc-800 flex items-center justify-center transition-opacity duration-50 ease-in-out ${
@@ -295,7 +306,7 @@ const Chat = () => {
                 input ? "animate-slideIn opacity-100" : "opacity-0"
               }`}
             >
-              {loading || replyLoading ? (
+              {replyLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
                 <SendHorizontal />
