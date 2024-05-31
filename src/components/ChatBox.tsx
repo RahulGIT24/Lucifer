@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import getDateAndTime from "@/helpers/date";
-import { Loader2 } from "lucide-react";
+import { Copy, Volume2 } from "lucide-react";
 import { IMessage } from "@/models/MessageModel";
 import Image from "next/image";
 import logo from "../../public/logo.jpeg";
+import { MarkdownToHtml, copy, speak } from "@/helpers/chatHelpers";
+import { useToast } from "./ui/use-toast";
+import "../app/chat.css"
 
 const ChatBox = ({
   message,
@@ -15,6 +18,8 @@ const ChatBox = ({
   loading?: boolean;
   onScreenMessage?: IMessage[];
 }) => {
+  const { toast } = useToast();
+  const [speaking, setSpeaking] = useState<boolean>(false);
   const { finalDate } = getDateAndTime(message.timestamp);
   const isUser = message.role === "user";
 
@@ -32,7 +37,7 @@ const ChatBox = ({
           ${
             isUser ? "bg-zinc-700" : "bg-transparent"
           } border-transparent min-h-5 text-white flex`}
-          title={finalDate}
+          // title={finalDate}
         >
           {message.role === "assistant" && (
             <Image
@@ -51,7 +56,48 @@ const ChatBox = ({
               "bg-red-300 rounded-full border-red-900 border text-red-900"
             } `}
           >
-            <p>{message.content}</p>
+            <div className="flex flex-col">
+              {
+                message.sender != "user" ? 
+                <p className="mb-3" dangerouslySetInnerHTML={{__html:MarkdownToHtml({markdown:message.content})}}></p>
+                :
+                <p className="mb-3">{message.content}</p>
+              }
+              {!loading && message.role === "assistant" && (
+                <div className="flex space text-white-600 mt-3 bg-zinc-900 rounded-2xl p-3 space-x-3">
+                  {message.content && (
+                    <button
+                      className={`min-w-5 min-h-5 cursor-pointer p-2 ${
+                        speaking ? "bg-white text-black rounded-lg" : "bg-transparent"
+                      }`}
+                      title="Listen Response"
+                    >
+                      <Volume2
+                        onClick={() => {
+                          speak(message.content, speaking, setSpeaking);
+                        }}
+                      />
+                    </button>
+                  )}
+                  {message.content && (
+                    <button
+                      className="min-w-5 min-h-5 cursor-pointer bg-transparent p-2 "
+                      onClick={() => {
+                        const check = copy(message.content);
+                        if (check) {
+                          toast({
+                            description: "Copied to clipboard",
+                          });
+                        }
+                      }}
+                      title="Copy"
+                    >
+                      <Copy />
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>

@@ -17,6 +17,7 @@ import ChatBox from "./ChatBox";
 import { useChat } from "ai/react";
 import { scroll } from "@/helpers/scroll";
 import { IMessage } from "@/models/MessageModel";
+import { stopSpeech } from "@/helpers/chatHelpers";
 
 const Chat = () => {
   const showSideBar = useAppSelector((state) => state.sidebarSlice.showSideBar);
@@ -31,6 +32,7 @@ const Chat = () => {
 
   useEffect(() => {
     if (sessionId) {
+      stopSpeech();
       getMessagesFromDB();
     }
     setReply([]);
@@ -63,7 +65,6 @@ const Chat = () => {
     },
   });
 
-  ////////////////////////////////*needs modification//////////////////////////////////
   const saveResinDB = () => {
     if (!replyLoading && reply.length > 0 && sessionId && !modelError) {
       saveMessagesinDB({
@@ -84,8 +85,6 @@ const Chat = () => {
   useEffect(() => {
     saveResinDB();
   }, [response]);
-
-  //*************************************************************************************** */
 
   const getMessagesFromDB = async () => {
     try {
