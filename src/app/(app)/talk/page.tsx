@@ -6,7 +6,7 @@ import { setShowSidebar } from '@/lib/store/features/sidebar/sidebarSlice'
 import { useAppDispatch } from '@/lib/store/hooks'
 import React from 'react'
 
-const page = () => {
+const Page = () => {
   const dispatch = useAppDispatch();
   return (
     <div className='flex relative h-screen' onClick={()=>{
@@ -18,4 +18,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

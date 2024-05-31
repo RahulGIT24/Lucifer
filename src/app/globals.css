@@ -5,6 +5,7 @@
 /* WebKit Browsers (Chrome, Safari, newer versions of Edge) */
 ::-webkit-scrollbar {
   width: 5px;  /* Width of the scrollbar */
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {

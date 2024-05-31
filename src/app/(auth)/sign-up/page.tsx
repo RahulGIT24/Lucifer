@@ -27,7 +27,7 @@ import { ApiResponse } from "@/types/ApiResponse";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 
-const sinUp = () => {
+const SignUp = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { toast } = useToast();
   const router = useRouter();
@@ -154,4 +154,4 @@ const sinUp = () => {
   );
 };
 
-export default sinUp;
+export default SignUp;

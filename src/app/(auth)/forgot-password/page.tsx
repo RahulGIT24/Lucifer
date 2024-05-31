@@ -19,7 +19,7 @@ import { ApiResponse } from "@/types/ApiResponse";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 
-const page = () => {
+const Page = () => {
   const [isChecking, setIsChecking] = useState<boolean>(false);
   const form = useForm({
     resolver: zodResolver(forgotPasswordSchema),
@@ -85,4 +85,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

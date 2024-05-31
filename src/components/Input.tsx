@@ -20,6 +20,7 @@ interface inputProps {
   ) => void;
   replyLoading: boolean;
   setInput: Dispatch<SetStateAction<string>>;
+  stop: ()=>void;
 }
 
 const Input = ({
@@ -28,6 +29,7 @@ const Input = ({
   handleInputChange,
   replyLoading,
   setInput,
+  stop
 }: inputProps) => {
   const {
     transcript,
@@ -45,7 +47,7 @@ const Input = ({
   function MicAndStop(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
     if (replyLoading) {
-      SpeechRecognition.stopListening();
+      stop();
       return;
     }
     if (listening) {

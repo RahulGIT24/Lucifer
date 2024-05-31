@@ -20,7 +20,7 @@ import { z } from "zod";
 import { signIn } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 
-const signin = () => {
+const Signin = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { toast } = useToast();
 
@@ -104,13 +104,13 @@ const signin = () => {
           </form>
         </Form>
         <p>
-          Don't have an account?{" "}
+          Sign Up here
           <Link href={"/sign-up"} className="text-blue-600 hover:text-blue-800">
             Sign Up
           </Link>
         </p>
         <p>
-          Have you forgotten your Password?{" "}
+          Have you forgotten your Password?
           <Link
             href={"/forgot-password"}
             className="text-blue-600 hover:text-blue-800"
@@ -123,4 +123,4 @@ const signin = () => {
   );
 };
 
-export default signin;
+export default Signin;

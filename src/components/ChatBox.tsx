@@ -60,6 +60,7 @@ const ChatBox = ({
               {message.role == "assistant" && (
                 <p
                   className="mb-3"
+                  id={message._id}
                   dangerouslySetInnerHTML={{
                     __html: MarkdownToHtml({ markdown: message.content }),
                   }}
@@ -89,7 +90,7 @@ const ChatBox = ({
                     <button
                       className="min-w-2 min-h-2 cursor-pointer bg-transparent p-2 "
                       onClick={() => {
-                        const check = copy(message.content);
+                        const check = copy(message._id);
                         if (check) {
                           toast({
                             description: "Copied to clipboard",

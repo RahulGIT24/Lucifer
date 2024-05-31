@@ -290,6 +290,7 @@ const Chat = () => {
         handleInputChange={handleInputChange}
         replyLoading={replyLoading}
         setInput={setInput}
+        stop={stop}
       />
     </div>
   );

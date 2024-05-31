@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
-const page = () => {
+const Page = () => {
   const [token, setToken] = useState("");
   const [isChanging, setIsChanging] = useState<boolean>(false);
   const { toast } = useToast();
@@ -124,4 +124,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
