@@ -55,3 +55,11 @@ a {
 a:hover {
     color: #0056b3;
 }
+
+@media screen and (max-width: 600px) {
+    /* Adjustments for smaller screens */
+    pre {
+        padding: 5px;
+        font-size: 14px;
+    }
+}

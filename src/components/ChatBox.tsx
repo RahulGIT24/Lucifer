@@ -7,7 +7,7 @@ import Image from "next/image";
 import logo from "../../public/logo.jpeg";
 import { MarkdownToHtml, copy, speak } from "@/helpers/chatHelpers";
 import { useToast } from "./ui/use-toast";
-import "../app/chat.css"
+import "../app/chat.css";
 
 const ChatBox = ({
   message,
@@ -37,7 +37,6 @@ const ChatBox = ({
           ${
             isUser ? "bg-zinc-700" : "bg-transparent"
           } border-transparent min-h-5 text-white flex`}
-          // title={finalDate}
         >
           {message.role === "assistant" && (
             <Image
@@ -57,18 +56,23 @@ const ChatBox = ({
             } `}
           >
             <div className="flex flex-col">
-              {
-                message.sender != "user" ? 
-                <p className="mb-3" dangerouslySetInnerHTML={{__html:MarkdownToHtml({markdown:message.content})}}></p>
-                :
-                <p className="mb-3">{message.content}</p>
-              }
+              {message.role == "assistant" && (
+                <p
+                  className="mb-3"
+                  dangerouslySetInnerHTML={{
+                    __html: MarkdownToHtml({ markdown: message.content }),
+                  }}
+                ></p>
+              )}
+              {message.role == "user" && <p className="mb-3">{message.content}</p>}
               {!loading && message.role === "assistant" && (
-                <div className="flex space text-white-600 mt-3 bg-zinc-900 rounded-2xl p-3 space-x-3">
+                <div className="flex space text-white-600 mt-3 bg-zinc-900 rounded-2xl p-1 space-x-3">
                   {message.content && (
                     <button
-                      className={`min-w-5 min-h-5 cursor-pointer p-2 ${
-                        speaking ? "bg-white text-black rounded-lg" : "bg-transparent"
+                      className={`min-w-2 min-h-2 cursor-pointer p-2 ${
+                        speaking
+                          ? "bg-white text-black rounded-lg"
+                          : "bg-transparent"
                       }`}
                       title="Listen Response"
                     >
@@ -81,7 +85,7 @@ const ChatBox = ({
                   )}
                   {message.content && (
                     <button
-                      className="min-w-5 min-h-5 cursor-pointer bg-transparent p-2 "
+                      className="min-w-2 min-h-2 cursor-pointer bg-transparent p-2 "
                       onClick={() => {
                         const check = copy(message.content);
                         if (check) {

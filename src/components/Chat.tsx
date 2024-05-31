@@ -1,6 +1,13 @@
 "use client";
 
-import { CircleStop, Loader2, Menu, Mic, SendHorizontal } from "lucide-react";
+import {
+  CircleStop,
+  Loader2,
+  Menu,
+  Mic,
+  MicOff,
+  SendHorizontal,
+} from "lucide-react";
 import { useSession } from "next-auth/react";
 import { FormEvent, useEffect, useState } from "react";
 import Card from "./Card";
@@ -18,6 +25,8 @@ import { useChat } from "ai/react";
 import { scroll } from "@/helpers/scroll";
 import { IMessage } from "@/models/MessageModel";
 import { stopSpeech } from "@/helpers/chatHelpers";
+
+import Input from "./Input";
 
 const Chat = () => {
   const showSideBar = useAppSelector((state) => state.sidebarSlice.showSideBar);
@@ -275,49 +284,13 @@ const Chat = () => {
           )}
         </div>
       </div>
-      <div className="fixed bottom-0 w-full pb-4 flex justify-center items-center bg-transparent">
-        <form
-          className="w-full md:w-[60%] sm:w-[80%] lg:w-[75%] flex"
-          onSubmit={handleSubmit}
-        >
-          <textarea
-            id="chat-input"
-            className="bg-zinc-800 w-[100%] h-20 rounded-l-3xl p-5 text-zinc-300 outline-none border border-t-zinc-700 border-l-zinc-700 border-b-zinc-700 border-r-0 shadow-2xl shadow-black overflow-y-auto resize-none z-20"
-            placeholder="Enter Some Text"
-            value={input}
-            onChange={(e) => {
-              handleInputChange(e);
-            }}
-            disabled={replyLoading ? true : false}
-          />
-          <button
-            className={`min-h-20 h-20 text-zinc-300 border shadow-2xl shadow-black border-t-zinc-700 border-b-zinc-700 border-l-0 p-5 bg-zinc-800 flex items-center justify-center ${
-              input ? "border-zinc-800" : "border-r-zinc-700 rounded-r-3xl"
-            }`}
-            onClick={stop}
-          >
-            {replyLoading ? <CircleStop strokeWidth={3} /> : <Mic />}
-          </button>
-          <button
-            className={`min-h-20 h-20 text-zinc-300 border shadow-2xl shadow-black border-t-zinc-700 border-r-zinc-700 border-b-zinc-700 border-l-0 rounded-r-3xl p-5 bg-zinc-800 flex items-center justify-center transition-opacity duration-50 ease-in-out ${
-              input ? "opacity-100" : "opacity-0"
-            }`}
-            type="submit"
-          >
-            <p
-              className={`transition-opacity duration-300 ease-in-out ${
-                input ? "animate-slideIn opacity-100" : "opacity-0"
-              }`}
-            >
-              {replyLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <SendHorizontal />
-              )}
-            </p>
-          </button>
-        </form>
-      </div>
+      <Input
+        handleSubmit={handleSubmit}
+        input={input}
+        handleInputChange={handleInputChange}
+        replyLoading={replyLoading}
+        setInput={setInput}
+      />
     </div>
   );
 };
