@@ -47,15 +47,16 @@ const ChatBox = ({
             />
           )}
           <CardContent
-            className={`text-2xl flex ${
+            className={`text-2xl flex${
               isUser ? "flex-row-reverse" : ""
             } items-center py-2 px-4 ${
               message.content.toLowerCase() ===
                 "error while generating response" &&
-              "bg-red-300 rounded-full border-red-900 border text-red-900"
+              "text-red-400 rounded-lg font-extrabold"
             } `}
           >
             <div className="flex flex-col">
+              <div className="response">
               {message.role == "assistant" && (
                 <p
                   className="mb-3"
@@ -64,8 +65,9 @@ const ChatBox = ({
                   }}
                 ></p>
               )}
-              {message.role == "user" && <p className="mb-3">{message.content}</p>}
-              {!loading && message.role === "assistant" && (
+              </div>
+              {message.role == "user" && <pre className="mb-3 text-lg max-w-full whitespace-pre-wrap break-words">{message.content}</pre>}
+              {!loading && message.role === "assistant" && message.content.toLowerCase()!=="error while generating response" && (
                 <div className="flex space text-white-600 mt-3 bg-zinc-900 rounded-2xl p-1 space-x-3">
                   {message.content && (
                     <button

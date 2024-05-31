@@ -1,27 +1,27 @@
 /* Basic styling for ChatGPT responses */
 
-p {
+.response p {
     margin: 0;
     font-size: 16px;
     line-height: 1.5;
 }
 
-strong {
+.response strong {
     font-weight: bold;
 }
 
-em {
+.response em {
     font-style: italic;
 }
 
-code {
+.response code {
     font-family: 'Courier New', Courier, monospace;
     background-color: black;
     padding: 2px 5px;
     border-radius: 3px;
 }
 
-pre {
+.response pre {
     margin: 12px 0;
     padding: 10px;
     background-color: black;
@@ -29,30 +29,30 @@ pre {
     overflow-x: auto;
 }
 
-blockquote {
+.response blockquote {
     margin: 0;
     padding: 10px;
     background-color: #f9f9f9;
     border-left: 4px solid #ccc;
 }
 
-ul,
+.response ul,
 ol {
     margin-top: 0;
     padding-left: 20px;
 }
 
-ul li,
+.response ul li,
 ol li {
     margin-bottom: 5px;
 }
 
-a {
+.response a {
     color: #007bff;
     text-decoration: underline;
 }
 
-a:hover {
+.response a:hover {
     color: #0056b3;
 }
 
