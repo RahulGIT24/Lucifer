@@ -104,13 +104,13 @@ const Signin = () => {
           </form>
         </Form>
         <p>
-          Sign Up here
+          Sign Up here{" "}
           <Link href={"/sign-up"} className="text-blue-600 hover:text-blue-800">
             Sign Up
           </Link>
         </p>
         <p>
-          Have you forgotten your Password?
+          Have you forgotten your Password?{" "}
           <Link
             href={"/forgot-password"}
             className="text-blue-600 hover:text-blue-800"

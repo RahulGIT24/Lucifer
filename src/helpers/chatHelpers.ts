@@ -1,29 +1,46 @@
 import { marked } from "marked";
 import DOMPurify from "dompurify";
+import { ISpeak } from "@/components/ChatBox";
 
 // fix this function
 export const speak = (
   text: string,
-  speaking: boolean,
-  setSpeaking: React.Dispatch<React.SetStateAction<boolean>>
+  speaking: ISpeak | undefined,
+  setSpeaking: React.Dispatch<React.SetStateAction<ISpeak | undefined>>,
+  id: string
 ) => {
   if (!text) return;
-  setSpeaking(false);
-  if (speaking) {
+
+  if (speaking && !speaking.isSpeaking) {
     window.speechSynthesis.cancel();
+  }
+
+  if (speaking && speaking.isSpeaking) {
+    window.speechSynthesis.cancel();
+    setSpeaking(undefined);
     return;
   }
-  window.speechSynthesis.cancel();
+
   const msg = new SpeechSynthesisUtterance();
+  msg.lang = "en-US";
+
+  msg.onstart = () => {
+    setSpeaking({ isSpeaking: true, messageId: id });
+  };
+
+  msg.onend = () => {
+    setSpeaking(undefined);
+  };
+
+  msg.onerror = () => {
+    setSpeaking(undefined);
+  };
+
   msg.text = text;
+
   setTimeout(() => {
     window.speechSynthesis.speak(msg);
-    setSpeaking(true);
-  }, 500);
-};
-
-export const stopSpeech = () => {
-  window.speechSynthesis.cancel();
+  }, 1000);
 };
 
 export const copy = (id: string) => {

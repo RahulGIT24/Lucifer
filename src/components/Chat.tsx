@@ -24,8 +24,6 @@ import ChatBox from "./ChatBox";
 import { useChat } from "ai/react";
 import { scroll } from "@/helpers/scroll";
 import { IMessage } from "@/models/MessageModel";
-import { stopSpeech } from "@/helpers/chatHelpers";
-
 import Input from "./Input";
 
 const Chat = () => {
@@ -41,7 +39,6 @@ const Chat = () => {
 
   useEffect(() => {
     if (sessionId) {
-      stopSpeech();
       getMessagesFromDB();
     }
     setReply([]);
