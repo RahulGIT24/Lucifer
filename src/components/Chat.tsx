@@ -1,12 +1,8 @@
 "use client";
 
 import {
-  CircleStop,
   Loader2,
-  Menu,
-  Mic,
-  MicOff,
-  SendHorizontal,
+  Menu
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { FormEvent, useEffect, useState } from "react";
@@ -40,6 +36,7 @@ const Chat = () => {
   useEffect(() => {
     if (sessionId) {
       getMessagesFromDB();
+      window.speechSynthesis.cancel();
     }
     setReply([]);
     setInput("");

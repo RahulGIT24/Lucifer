@@ -41,7 +41,6 @@ const Page = () => {
       });
       router.replace('/sign-in')
     } catch (error) {
-      console.log(error)
       const axiosError = error as AxiosError<ApiResponse>;
       let errMessage = axiosError.response?.data.message;
       toast({

@@ -4,21 +4,24 @@ import { ISpeak } from "@/components/ChatBox";
 
 // fix this function
 export const speak = (
-  text: string,
   speaking: ISpeak | undefined,
   setSpeaking: React.Dispatch<React.SetStateAction<ISpeak | undefined>>,
   id: string
 ) => {
-  if (!text) return;
-
-  if (speaking && !speaking.isSpeaking) {
-    window.speechSynthesis.cancel();
+  const text = document.getElementById(id)?.textContent;
+  if (!text) {
+    return;
   }
 
-  if (speaking && speaking.isSpeaking) {
+  if(speaking?.messageId === id){
     window.speechSynthesis.cancel();
     setSpeaking(undefined);
     return;
+  }
+
+  if(speaking?.messageId !== id){
+    window.speechSynthesis.cancel();
+    setSpeaking({isSpeaking:true,messageId:id});
   }
 
   const msg = new SpeechSynthesisUtterance();
@@ -40,8 +43,10 @@ export const speak = (
 
   setTimeout(() => {
     window.speechSynthesis.speak(msg);
-  }, 1000);
+  }, 500);
 };
+
+
 
 export const copy = (id: string) => {
   if (!id) return;

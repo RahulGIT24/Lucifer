@@ -25,14 +25,12 @@ const ChatBox = ({
 }) => {
   const { toast } = useToast();
   const [speaking, setSpeaking] = useState<ISpeak>();
-  useEffect(() => {
-    console.log(speaking);
-  }, [speaking]);
+
   const { finalDate } = getDateAndTime(message.timestamp);
   const isUser = message.role === "user";
 
   const isOnScreen = onScreenMessage?.some(
-    (screenMessage) => screenMessage._id === message._id
+    (screenMessage) => screenMessage._id === message._id || message.id
   );
 
   if (isOnScreen) {
@@ -68,7 +66,7 @@ const ChatBox = ({
                 {message.role == "assistant" && (
                   <p
                     className="mb-3"
-                    id={message._id}
+                    id={message._id || message.id}
                     dangerouslySetInnerHTML={{
                       __html: MarkdownToHtml({ markdown: message.content }),
                     }}
@@ -89,23 +87,18 @@ const ChatBox = ({
                       <button
                         className={`min-w-2 min-h-2 cursor-pointer p-2 ${
                           speaking &&
-                          speaking.messageId === message._id &&
-                          speaking.isSpeaking === true
+                          speaking.messageId === message._id || message.id &&
+                          speaking?.isSpeaking === true
                             ? "bg-white text-black rounded-lg"
                             : "bg-transparent"
                         }`}
                         title="Listen Response"
                         onClick={() => {
-                          if (message._id) {
-                            setSpeaking({
-                              isSpeaking: false,
-                              messageId: message._id,
-                            });
+                          if (message._id || message.id) {
                             speak(
-                              message.content,
                               speaking,
                               setSpeaking,
-                              message._id
+                              message._id || message.id
                             );
                           }
                         }}
@@ -117,7 +110,7 @@ const ChatBox = ({
                       <button
                         className="min-w-2 min-h-2 cursor-pointer bg-transparent p-2 "
                         onClick={() => {
-                          const check = copy(message._id);
+                          const check = copy(message._id || message.id);
                           if (check) {
                             toast({
                               description: "Copied to clipboard",
