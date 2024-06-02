@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Lucifer is an AI Chat Bot that utilizes Gemini API where users can interact with the bot, save sessions in the chat etc...
 
-## Getting Started
+## Description 
+It is an AI Chat Bot that uses Google's Gemini API. It fetch responses on user's request, stream messages live on frontend and store them in database also. It also has a feature to save the chat session in the chat itself. It is created using NextJs, Typescript, MongoDB and Zod for validation. Frontend is designed using shadCn and tailwind css. It has the capability to read aloud messages and can except voice messages as well. You can also copy response as it is shown on the screen. It uses Next Auth for authentication and Resend to send Emails. It also uses Redux for state management. For icons I have used Lucid React. useForm hook is used for handling form validation and submissions. Vercel AI Sdk is used for response streaming.
 
-First, run the development server:
+## Lucifer's Screenshot
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+#### Intro Screen
+![alt text](assets/intro.png)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Authentication
+![alt text](assets/create.png)
+![alt text](assets/signin.png)
+![alt text](assets/verify.png)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### Dashboard
+![alt text](assets/dash.png)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+#### Reponses
+![alt text](assets/response.png)
 
-## Learn More
+#### Your Activity or Chat Sessions
+![alt text](assets/sessions.png)
 
-To learn more about Next.js, take a look at the following resources:
+#### Voice Input
+![alt text](assets/voice.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Setup Guide
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+#### Server Setup
 
-## Deploy on Vercel
+1. Open the terminal in `gemini`folder and run `npm install`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. Create a new `.env` file in server folder and add the environment variables as mentioned in `.env.sample` file
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+3. Run `npm run dev` to start the application
+
+#### Note -: Currently this application uses free version of Resend, it means it is able to send emails only to the admin of the Resend API key. So, if you want to use it's deployed version please login with credentials as follow -:
+#### Email: `rg4005450@gmail.com`
+#### Password: `rahulisgreat`
+
+## Author's Social Links 🖥️
+
+- [Twitter](https://twitter.com/rahu__24)
+- [LinkedIn](https://www.linkedin.com/in/rahu24/)
+- [Instagram](https://www.instagram.com/rahu__24/)
