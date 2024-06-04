@@ -12,7 +12,7 @@ const initialState: ChatSessionInterface = {
 };
 
 export const chatSlice = createSlice({
-  name: "sidebar",
+  name: "chatslice",
   initialState,
   reducers: {
     setChatSessionId: (state, action) => {
