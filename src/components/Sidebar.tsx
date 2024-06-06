@@ -124,9 +124,8 @@ const Sidebar = () => {
       >
         {sessions &&
           sessions.map((session) => (
-            <div className="flex items-center">
+            <div className="flex items-center" key={session._id}>
               <p
-                key={session._id}
                 className={`whitespace-nowrap overflow-hidden text-ellipsis my-3 text-lg hover:bg-zinc-600 w-full cursor-pointer py-3 ${
                   chatSessionId === session._id
                     ? "bg-zinc-600"
