@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  next-app:
+    container_name: lucifer
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # Set environment variables based on the .env file
+    env_file:
+      - .env
+    volumes:
+      - lucifer_data:/data/db
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - lucifer_network
+
+  mongo:
+    container_name: luciferDB
+    image: mongo:latest
+    restart: always
+    volumes:
+      - lucifer_data:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - lucifer_network
+
+volumes:
+  lucifer_data:
+
+networks:
+  lucifer_network:
+    external: true

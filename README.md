@@ -27,13 +27,18 @@ It is an AI Chat Bot that uses Google's Gemini API. It fetch responses on user's
 
 ## Setup Guide
 
-#### Server Setup
+#### Setup
 
 1. Open the terminal in `gemini`folder and run `npm install`
 
-2. Create a new `.env` file in server folder and add the environment variables as mentioned in `.env.sample` file
+2. Create a new `.env` file in root folder and add the environment variables as mentioned in `.env.sample` file
 
 3. Run `npm run dev` to start the application
+
+#### Docker Setup (If docker is installed on your machine)
+1. Add the required environment variables in `.env` file
+2. Your mongo db connection string can look like this `mongodb://luciferDB:27017/dbName` in .env file
+3. Open the terminal in `gemini`folder and run `docker-compose up` command make sure the ports are available you can change them as well in `docker-compose.yml` file.
 
 #### Note -: Currently this application uses free version of Resend, it means it is able to send emails only to the admin of the Resend API key. So, if you want to use it's deployed version please login with credentials as follow -:
 #### Email: `rg4005450@gmail.com`
