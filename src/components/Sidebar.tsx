@@ -73,7 +73,7 @@ const Sidebar = () => {
 
   const onDeleteSession = async () => {
     try {
-      const res = await axios.delete("/api/delete-session", {
+      const res = await axios.delete("/api/chat-session", {
         data: { session_id: chatSessionId as string },
       });
       await getUserChatSessions();
