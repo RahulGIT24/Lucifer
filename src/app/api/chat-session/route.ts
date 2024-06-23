@@ -57,6 +57,17 @@ export async function GET(request: Request) {
     const userSession = await getServerSession(authOptions);
     const user = userSession?.user;
     const cache = await redis.get(`${user?._id} chat-session`);
+  
+    if (!user) {
+      return Response.json(
+        {
+          success: false,
+          message: "Session Expired",
+        },
+        { status: 401 }
+      );
+    }
+  
     if (cache) {
       return Response.json(
         {
@@ -65,16 +76,6 @@ export async function GET(request: Request) {
           session: JSON.parse(cache),
         },
         { status: 200 }
-      );
-    }
-
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message: "Session Expired",
-        },
-        { status: 401 }
       );
     }
 
