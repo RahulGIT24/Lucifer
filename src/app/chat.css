@@ -63,3 +63,7 @@ ol li {
         font-size: 14px;
     }
 }
+
+blockquote strong{
+    color: black;
+}

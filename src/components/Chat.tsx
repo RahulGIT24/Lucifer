@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  Loader2,
-  Menu
-} from "lucide-react";
+import { Loader2, Menu } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { FormEvent, useEffect, useState } from "react";
 import Card from "./Card";
@@ -21,6 +18,7 @@ import { useChat } from "ai/react";
 import { scroll } from "@/helpers/scroll";
 import { IMessage } from "@/models/MessageModel";
 import Input from "./Input";
+import { Message } from "ai";
 
 const Chat = () => {
   const showSideBar = useAppSelector((state) => state.sidebarSlice.showSideBar);
@@ -29,7 +27,6 @@ const Chat = () => {
   const messages = useAppSelector((state) => state.chatSlice.messages);
   const [response, setResponse] = useState(false); // *will remove later
   const dispatch = useAppDispatch();
-  const [onScreenMessage, setOnScreenMessages] = useState<IMessage[]>([]);
   const { data: session } = useSession();
   const user = session?.user;
 
@@ -40,7 +37,6 @@ const Chat = () => {
     }
     setReply([]);
     setInput("");
-    setOnScreenMessages([]);
   }, [sessionId]);
 
   const toggleMenu = (e: any) => {
@@ -67,6 +63,12 @@ const Chat = () => {
       setResponse(!response);
     },
   });
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      setReply(messages as Message[]);
+    }
+  }, [messages]);
 
   const saveResinDB = () => {
     if (!replyLoading && reply.length > 0 && sessionId && !modelError) {
@@ -122,8 +124,6 @@ const Chat = () => {
         content,
         session_id: sessionId,
       });
-      dispatch(setMessages([...messages, response.data.content]));
-      setOnScreenMessages([...onScreenMessage, response.data.content]);
     } catch (error) {
       const err = error as AxiosError<ApiResponse>;
       const errMessage = err.message;
@@ -186,8 +186,10 @@ const Chat = () => {
   ];
 
   useEffect(() => {
-    scroll("scroll");
-  }, [sessionId, messages, input, reply]);
+    setTimeout(()=>{
+      scroll("scroll");
+    },500)
+  }, [sessionId, messages,reply]);
 
   return (
     <div
@@ -243,19 +245,6 @@ const Chat = () => {
                   </>
                 )}
               </div>
-            </div>
-          )}
-          {sessionId && messages.length > 0 && (
-            <div className="w-full">
-              {messages.map((message, index) => {
-                return (
-                  <ChatBox
-                    key={index}
-                    message={message}
-                    onScreenMessage={onScreenMessage}
-                  />
-                );
-              })}
             </div>
           )}
           {sessionId && reply.length > 0 && (
