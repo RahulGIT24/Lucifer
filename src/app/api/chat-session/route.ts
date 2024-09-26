@@ -3,7 +3,7 @@ import ChatSession from "@/models/ChatModel";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
 import mongoose from "mongoose";
-import redis from "@/lib/redis";
+// import redis from "@/lib/redis";
 import MessageModel from "@/models/MessageModel";
 
 export async function POST(request: Request) {
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     });
 
     await session.save();
-    await redis.del(`${user?._id} chat-session`);
+    // await redis.del(`${user?._id} chat-session`);
     return Response.json(
       {
         success: true,
@@ -56,7 +56,7 @@ export async function GET(request: Request) {
   try {
     const userSession = await getServerSession(authOptions);
     const user = userSession?.user;
-    const cache = await redis.get(`${user?._id} chat-session`);
+    // const cache = await redis.get(`${user?._id} chat-session`);
   
     if (!user) {
       return Response.json(
@@ -68,16 +68,16 @@ export async function GET(request: Request) {
       );
     }
   
-    if (cache) {
-      return Response.json(
-        {
-          success: true,
-          message: "Session fetched successfully",
-          session: JSON.parse(cache),
-        },
-        { status: 200 }
-      );
-    }
+    // if (cache) {
+    //   return Response.json(
+    //     {
+    //       success: true,
+    //       message: "Session fetched successfully",
+    //       session: JSON.parse(cache),
+    //     },
+    //     { status: 200 }
+    //   );
+    // }
 
     const userId = new mongoose.Types.ObjectId(user._id);
 
@@ -87,7 +87,7 @@ export async function GET(request: Request) {
     ]).exec();
 
     const sessionJSON = JSON.stringify(sessions);
-    await redis.set(`${user._id} chat-session` as string, sessionJSON);
+    // await redis.set(`${user._id} chat-session` as string, sessionJSON);
 
     return Response.json(
       {
@@ -132,7 +132,7 @@ export async function DELETE(request: Request) {
       { $new: true }
     );
     await MessageModel.deleteMany({ session_id });
-    await redis.del(`${user?._id} chat-session`);
+    // await redis.del(`${user?._id} chat-session`);
 
     return Response.json(
       {
